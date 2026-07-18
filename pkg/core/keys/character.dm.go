@@ -47,6 +47,7 @@ const (
 	Gaming
 	Ganyu
 	Gorou
+	Hector
 	Heizou
 	Hutao
 	Ineffa
