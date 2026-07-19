@@ -12,7 +12,7 @@ func (c *char) Skill(p map[string]int) (int, int) {
 	// 1. Первый удар Е-шки (211.4% Электро урон)
 	ai := combat.AttackInfo{
 		ActorIndex: c.Index,
-		Abil:       "Быстрый разряд (Начало)",
+		Abil:       "Skill Cast",
 		AttackTag:  combat.AttackTagElementalSkill,
 		ICDTag:     combat.ICDTagNone, // 0 ICD для гарантированной реакции
 		Element:    attributes.Electro,
@@ -22,7 +22,7 @@ func (c *char) Skill(p map[string]int) (int, int) {
 	// Очередь атаки с колбэком (проверяем, вызвана ли реакция)
 	c.core.QueueAttack(ai, combat.NewCircleHit(c.core.Combat.PrimaryTarget(), 2), f, f, func(ac combat.AttackCB) {
 		// Проверяем, закрыл ли удар Сверхпроводник или Звёздный проводник
-		if ac.Reaction == core.Superconduct || ac.Reaction == core.StarSuperconduct {
+		if ac.Reaction == core.Superconduct || ac.Reaction == core.StellarConduct {
 			c.triggerSparkingTrace()
 		}
 	})
@@ -38,7 +38,7 @@ func (c *char) triggerSparkingTrace() {
 	// Доп. урон по площади (145.2%)
 	aiArea := combat.AttackInfo{
 		ActorIndex: c.Index,
-		Abil:       "Быстрый разряд (Доп. АоЕ)",
+		Abil:       "Skill Area",
 		AttackTag:  combat.AttackTagElementalSkill,
 		Element:    attributes.Electro,
 		Mult:       1.452,
@@ -50,7 +50,7 @@ func (c *char) triggerSparkingTrace() {
 		delay := i * 150
 		aiDot := combat.AttackInfo{
 			ActorIndex: c.Index,
-			Abil:       "Искрящийся след (Карман)",
+			Abil:       "Sparking Trace",
 			AttackTag:  combat.AttackTagElementalSkill,
 			ICDTag:     combat.ICDTagElementalSkill,
 			Element:    attributes.Electro,
@@ -77,7 +77,7 @@ func (c *char) triggerSparkingTrace() {
 	// Взрыв Метки Холодной руки через 3 секунды (180 фреймов) — Физ. урон (388.8%)
 	aiMark := combat.AttackInfo{
 		ActorIndex: c.Index,
-		Abil:       "Метка Холодной руки (Взрыв)",
+		Abil:       "Cold Hand Burst",
 		AttackTag:  combat.AttackTagElementalSkill,
 		Element:    attributes.Physical,
 		Mult:       3.888,
