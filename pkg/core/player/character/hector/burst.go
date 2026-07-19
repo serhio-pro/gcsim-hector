@@ -12,7 +12,7 @@ func (c *char) Burst(p map[string]int) (int, int) {
 	// Урон активации ульты (188.6% Электро АоЕ)
 	ai := combat.AttackInfo{
 		ActorIndex: c.Index,
-		Abil:       "Призматическое преломление (Старт)",
+		Abil:       "Burst Cast",
 		AttackTag:  combat.AttackTagElementalBurst,
 		Element:    attributes.Electro,
 		Mult:       1.886,
@@ -22,7 +22,7 @@ func (c *char) Burst(p map[string]int) (int, int) {
 	// Мгновенное наложение физ. метки от ульты через 1 секунду
 	aiMark := combat.AttackInfo{
 		ActorIndex: c.Index,
-		Abil:       "Метка Холодной руки (Ульта)",
+		Abil:       "Burst Cold Hand",
 		AttackTag:  combat.AttackTagElementalBurst,
 		Element:    attributes.Physical,
 		Mult:       3.888,
@@ -47,7 +47,7 @@ func (c *char) Burst(p map[string]int) (int, int) {
 			// Три преломления делают совместный Физ. удар (3 * 76.4%)
 			aiPrism := combat.AttackInfo{
 				ActorIndex: c.Index,
-				Abil:       "Призматическое преломление (Совместная)",
+				Abil:       "Prism Joint Attack",
 				AttackTag:  combat.AttackTagElementalBurst,
 				Element:    attributes.Physical,
 				Mult:       0.764 * 3, 
@@ -57,7 +57,7 @@ func (c *char) Burst(p map[string]int) (int, int) {
 			// Дополнительное AoE-эхо по площади (не бьет основную цель)
 			aiEcho := combat.AttackInfo{
 				ActorIndex: c.Index,
-				Abil:       "Призматическое преломление (Эхо АоЕ)",
+				Abil:       "Prism AoE Echo",
 				AttackTag:  combat.AttackTagElementalBurst,
 				Element:    attributes.Physical,
 				Mult:       0.764,
