@@ -89,7 +89,59 @@ func (c *char) InitPassiveTalents() {
 
 // Реализация Обычной Атаки и разгона критов от С6
 func (c *char) Attack(p map[string]int) (int, int) {
+	travel, V := c.CharWrapper.Attack(p)
 	f, a := c.ActionFrames(core.ActionAttack, p)
+
+	multipliers := []float64{
+		0.482 + 0.511, // N1
+		0.924,         // N2
+		0.553 + 0.587, // N3
+		1.105,         // N4
+		1.431,         // N5
+	}
+
+	hitIndex := c.NormalCounter
+	if hitIndex >= len(multipliers) {
+		hitIndex = 0
+	}
+
+	if c.Base.Cons >= 6 {
+		c.c6Stacks++
+		if c.c6Stacks > 10 {
+			c.c6Stacks = 10
+		}
+		
+		c.AddAttackMod(character.AttackMod{
+			Base: modifier.NewBase("hector-c6-crit", f),
+			Amount: func(atk *combat.AttackEvent, t combat.Target) ([]float64, bool) {
+				val := make([]float64, attributes.EndStatType)
+				val[attributes.CR] = float64(c.c6Stacks) * 0.02
+				val[attributes.CD] = float64(c.c6Stacks) * 0.04
+				return val, true
+			},
+		})
+	}
+
+	ai := combat.AttackInfo{
+		ActorIndex: c.Index,
+		Abil:       "Normal Attack", // Только английский!
+		AttackTag:  combat.AttackTagNormal,
+		ICDTag:     combat.ICDTagNormalAttack,
+		ICDGroup:   combat.ICDGroupDefault,
+		Element:    attributes.Physical,
+		Durability: 25,
+		Mult:       multipliers[hitIndex],
+	}
+	
+	radius := 1.0
+	if c.core.Status.Duration("hector-burst-active") > 0 {
+		radius = 3.0 
+	}
+
+	c.core.QueueAttack(ai, combat.NewCircleHit(c.core.Combat.PrimaryTarget(), radius), travel, f)
+
+	return f, a
+}
 	
 	// Логика С6: добавляем стаки за каждый удар
 	if c.Base.Cons >= 6 {
